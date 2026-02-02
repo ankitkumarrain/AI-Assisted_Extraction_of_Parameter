@@ -1,0 +1,55 @@
+risc_v_architectural_parameters:
+  metadata:
+    specification: "RISC-V Privileged Specification"
+    section: "2.1"
+    topic: "CSR Address Mapping and Accessibility"
+    extraction_date: "2026-01-30"
+    llm_used: "Claude Sonnet 4.5"
+  
+  parameters:
+    - name: csr_address_mapping_convention
+      description: "The convention for using the upper 4 bits of CSR address (csr[11:8]) to encode read/write accessibility according to privilege level"
+      type: enumeration
+      constraints:
+        - "Uses upper 4 bits of 12-bit CSR address space"
+        - "Top two bits (csr[11:10]) indicate read/write (00, 01, or 10) or read-only (11)"
+        - "Next two bits (csr[9:8]) encode lowest privilege level that can access the CSR"
+        - "Referred to as 'conventional' approach"
+        - "Details specified in Table 1 (reference)"
+      source_quote: "By convention, the upper 4 bits of the CSR address (csr[11:8]) are used to encode the read and write accessibility"
+      specification_reference: "Privileged Spec 2.1"
+      default_value: unspecified
+      discovery_method: "Defined by convention, not mandatory"
+      notes: "This is described as a 'convention' rather than a strict requirement, suggesting implementations may deviate. The use of 'by convention' implies this is implementation-defined behavior that follows a standard pattern."
+      related_tables:
+        - "Table 1: CSR address mapping details"
+
+  validation:
+    total_parameters_extracted: 1
+    trigger_phrases_found:
+      - "By convention"
+      - "Reference to address mapping (markdown emphasis suggests parameter)"
+      - "Reference to Table 1 (markdown emphasis suggests implementation-specific details)"
+    all_parameters_verified: true
+    hallucination_check: "Parameter has corresponding source text"
+    
+  analysis_notes:
+    ambiguity: "The phrase 'by convention' is somewhat ambiguous - it could mean this is a strong recommendation that all implementations follow, or it could indicate this is optional/implementation-defined. The markdown emphasis on 'address mapping' and 'Table 1' in the original text suggests these are significant parameters."
+    extraction_rationale: "While 'by convention' is not in the explicit trigger phrase list, it strongly implies implementation flexibility and optional adherence, which aligns with the parameter extraction goal."
+    alternative_interpretation: "This could also be interpreted as a mandatory standard that all implementations must follow, in which case it would NOT be a parameter. Additional context from the specification would clarify."
+
+  trigger_phrases_v2:
+    primary_indicators:
+      - "implementation-specific"
+      - "optional"
+      - "may"
+    secondary_indicators:
+      - phrase: "by convention"
+        evaluation: "Requires context evaluation"
+      - phrase: "markdown emphasized references to tables/figures"
+        evaluation: "Often indicate variable parameters"
+    context_evaluation_rules:
+      - condition: "Text says 'by convention' but mandates compliance"
+        classification: "NOT a parameter"
+      - condition: "Text says 'by convention' without enforcement language"
+        classification: "Likely IS a parameter"

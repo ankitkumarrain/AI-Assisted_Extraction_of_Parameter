@@ -1,0 +1,25 @@
+architectural_parameters:
+  - name: cache_capacity
+    description: The total storage capacity of the cache.
+    type: integer
+    unit: bytes
+    variability: implementation-specific
+    constraints: null
+  - name: cache_organization
+    description: The structural arrangement of the cache (e.g., associativity, sets).
+    type: string
+    variability: implementation-specific
+    constraints: null
+  - name: cache_block_size
+    description: The size of a single contiguous, naturally aligned block within the cache.
+    type: integer
+    unit: bytes
+    variability: implementation-specific
+    constraints:
+      alignment: Naturally aligned power-of-two (NAPOT)
+      uniformity: Must be uniform throughout the system per CMO extensions
+  - name: discovery_mechanism
+    description: The method provided by the execution environment for software to query cache metadata.
+    type: interface
+    variability: implementation-specific
+    constraints: Must provide information about cache capacity, organization, and block size.

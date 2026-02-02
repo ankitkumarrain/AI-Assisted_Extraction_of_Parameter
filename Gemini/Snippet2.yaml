@@ -1,0 +1,23 @@
+architectural_parameters:
+  - name: csr_encoding_space
+    description: The total available address space for Control and Status Registers.
+    type: integer
+    value: 4096
+    constraints: 12-bit encoding (csr[11:0])
+  - name: csr_access_mode_mapping
+    description: Convention for determining if a CSR is Read/Write or Read-Only based on its address.
+    type: bit_field
+    bits: "csr[11:10]"
+    constraints:
+      - "00, 01, or 10: Read/Write"
+      - "11: Read-only"
+  - name: csr_privilege_level_mapping
+    description: Convention for encoding the minimum privilege level required to access a CSR.
+    type: bit_field
+    bits: "csr[9:8]"
+    constraints: "Encodes the lowest privilege level allowed for access"
+  - name: csr_address_convention
+    description: The use of the upper 4 bits to define accessibility and privilege.
+    type: bit_field
+    bits: "csr[11:8]"
+    variability: Conventional (Standardized)

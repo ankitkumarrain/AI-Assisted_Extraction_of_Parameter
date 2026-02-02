@@ -1,0 +1,105 @@
+risc_v_architectural_parameters:
+  metadata:
+    specification: "RISC-V Privileged Specification"
+    section: "2.1"
+    topic: "CSR Address Mapping and Accessibility"
+    extraction_date: "2026-01-31"
+    llm_used: "Claude Sonnet 4.5"
+    extraction_methodology: "Refined prompt with trigger phrase detection and anti-hallucination validation"
+  
+  parameters:
+    - name: csr_address_mapping_convention
+      description: "Convention for encoding read/write accessibility and privilege level in the upper 4 bits of CSR addresses (csr[11:8])"
+      type: enumeration
+      possible_values:
+        - "Standard convention using csr[11:8] for accessibility encoding"
+        - "Alternative address mapping scheme"
+      constraints:
+        - "Applies to 12-bit CSR encoding space (csr[11:0])"
+        - "When following convention: csr[11:10] encode R/W access, csr[9:8] encode privilege level"
+        - "Details provided in Table 1"
+      source_quote: "By convention, the upper 4 bits of the CSR address (csr[11:8]) are used to encode the read and write accessibility"
+      specification_reference: "Privileged Spec 2.1"
+      default_value: "Standard convention (recommended)"
+      discovery_method: "Architecture specification and Table 1"
+      implementation_flexibility: "High - described as 'by convention' rather than mandatory"
+      notes: "The use of 'by convention' indicates this is a recommended practice that implementations may optionally follow, not a strict requirement"
+      
+    - name: csr_read_write_encoding
+      description: "Encoding scheme for CSR read/write accessibility in bits csr[11:10]"
+      type: enumeration
+      possible_values:
+        read_write_options:
+          - value: "00"
+            meaning: "Read/Write"
+          - value: "01"
+            meaning: "Read/Write"
+          - value: "10"
+            meaning: "Read/Write"
+          - value: "11"
+            meaning: "Read-Only"
+      constraints:
+        - "Uses 2-bit encoding in csr[11:10]"
+        - "Values 00, 01, 10 indicate read/write capability"
+        - "Value 11 indicates read-only"
+        - "Part of conventional address mapping"
+      source_quote: "The top two bits (csr[11:10]) indicate whether the register is read/write (00,01, or 10) or read-only (11)"
+      specification_reference: "Privileged Spec 2.1"
+      default_value: "Implementation chooses based on CSR function"
+      discovery_method: "CSR address inspection"
+      implementation_flexibility: "Medium - if following convention, must use this encoding; but convention itself is optional"
+      notes: "Three values (00, 01, 10) map to read/write, suggesting potential for sub-categories or reserved encodings"
+      
+    - name: csr_privilege_level_encoding
+      description: "Encoding of the lowest privilege level that can access a CSR in bits csr[9:8]"
+      type: enumeration
+      possible_values:
+        - value: "00"
+          typical_meaning: "User/Application mode (lowest privilege)"
+        - value: "01"
+          typical_meaning: "Supervisor mode"
+        - value: "10"
+          typical_meaning: "Hypervisor mode (if implemented)"
+        - value: "11"
+          typical_meaning: "Machine mode (highest privilege)"
+      constraints:
+        - "Uses 2-bit encoding in csr[9:8]"
+        - "Encodes minimum privilege level required for access"
+        - "Part of conventional address mapping"
+        - "Specific privilege level mappings may vary by implementation"
+      source_quote: "The next two bits (csr[9:8]) encode the lowest privilege level that can access the CSR"
+      specification_reference: "Privileged Spec 2.1"
+      default_value: "Implementation defines per CSR based on security requirements"
+      discovery_method: "CSR address inspection and Table 1"
+      implementation_flexibility: "Medium - encoding scheme is conventional; actual privilege assignments per CSR may vary"
+      notes: "Privilege level values shown are typical interpretations; actual mappings should be verified in Table 1"
+
+  extraction_metadata:
+    total_parameters_extracted: 3
+    trigger_phrases_found:
+      - "By convention"
+    markdown_emphasis_indicators:
+      - "__address mapping__"
+      - "__Table 1__"
+    confidence_level: "Medium-High"
+    confidence_rationale: "The phrase 'by convention' clearly indicates non-mandatory behavior, making these implementation-defined parameters. However, the text doesn't use explicit phrases like 'implementation-specific' which would provide higher certainty."
+    
+  validation:
+    all_parameters_verified: true
+    hallucination_check: "PASSED - All parameters have corresponding source quotes"
+    cross_reference_check: "Table 1 referenced but not provided in snippet"
+    ambiguity_flags:
+      - issue: "Exact meanings of encoding values not fully specified in snippet"
+        resolution: "Marked typical values; noted that Table 1 contains authoritative details"
+      - issue: "'By convention' could mean strong recommendation vs truly optional"
+        resolution: "Treated as parameter due to non-mandatory language; flagged for review"
+    
+  recommendations:
+    for_implementers:
+      - "Review Table 1 for complete CSR address mapping details"
+      - "Consider following standard convention for compatibility"
+      - "Document any deviations from conventional address mapping"
+    for_further_extraction:
+      - "Extract Table 1 contents for complete privilege level mappings"
+      - "Cross-reference with other sections discussing CSR accessibility"
+      - "Identify any mandatory vs optional aspects of this convention"
